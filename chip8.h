@@ -37,6 +37,9 @@ struct VirtualMachine {
 };
 
 // function declarations
-void init_vm();
+void vm_init(struct VirtualMachine *);
+void fetch_opcode();
+void decode_opcode(unsigned short);
+void execute_opcode(unsigned short, struct VirtualMachine *);
 
 #endif

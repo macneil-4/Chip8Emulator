@@ -20,7 +20,7 @@ const unsigned char chip8_fontset[80] =
   0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-void init_vm(struct VirtualMachine *vm) {
+void vm_init(struct VirtualMachine *vm) {
     printf("Initializing VM...\n");
 
     vm->idx = 0;

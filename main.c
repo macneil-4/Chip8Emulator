@@ -9,9 +9,7 @@ int main()
 
     // setup input
     struct VirtualMachine vm;
-    init_vm(vm);
-
-    printf("test");
+    vm_init(&vm);
 
     // initialize VM - Clear the memory, registers and screen
         // Initialize registers and memory once
