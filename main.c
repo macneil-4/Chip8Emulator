@@ -8,11 +8,11 @@ int main()
     // setup graphics Setup the graphics (window size, display mode, etc) and input system (bind callbacks)
 
     // setup input
-    struct VirtualMachine vm;
-    vm_init(&vm);
 
     // initialize VM - Clear the memory, registers and screen
         // Initialize registers and memory once
+    struct VirtualMachine vm;
+    vm_init(&vm);
 
     // load game from file - Copy the program into the memory
 

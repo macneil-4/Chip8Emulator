@@ -2,14 +2,11 @@
 #define CHIP8_H
 
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 // variable declarations
 extern const unsigned char chip8_fontset[80];
-
-// 64x32-pixel monochrome display (0,0)	(63,0)
-// (0,31)(63,31)
-unsigned char display[64 * 32]; // 2048 pixels, monochrome (either black or white, 1 or 0)
 
 struct Keypad {
   // keys => 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F
@@ -34,6 +31,11 @@ struct VirtualMachine {
     unsigned char sound_t; // sound timer
     unsigned char sp; // stack pointer
     unsigned char memory[4096];
+
+    // 64x32-pixel monochrome display (0,0)	(63,0)
+    // (0,31)(63,31)
+    // 2048 pixels, monochrome (either black or white, 1 or 0)
+    unsigned char display[64 * 32];
 };
 
 // function declarations

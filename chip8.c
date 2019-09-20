@@ -1,5 +1,23 @@
 #include "chip8.h"
 
+/*
+    // unsigned char - 8 bits, [0,255]
+    // unsigned short/int - 16 bits, [0, 65535]
+
+    // member variables
+    unsigned short idx; // index register
+    unsigned short stack[16]; // the stack - up to 48 bytes
+    unsigned short pc; // program counter
+    unsigned short opcode; // current opcode
+
+    unsigned char v[16]; // general purpose 8-bit registers - vf (v[15]) should be avoided as it also doubles as a flag for some instructions
+    unsigned char delay_t; // delay timer
+    unsigned char sound_t; // sound timer
+    unsigned char sp; // stack pointer
+    unsigned char memory[4096];
+ *
+ */
+
 const unsigned char chip8_fontset[80] =
 {
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -29,13 +47,22 @@ void vm_init(struct VirtualMachine *vm) {
     vm->pc = 0x200; // CHIP-8 expects application to be loaded at 0x200, so initialize to memory location 0x200
 
     // Clear display
-      // Clear stack
-      // Clear registers V0-VF
-      // Clear memory
+    memset(vm->display, 0 , sizeof vm->display);
 
-      // Load fontset
-      for(int i = 0; i < 80; ++i)
+    // Clear stack
+    memset(vm->stack, 0, sizeof vm->stack);
+
+    // Clear registers V0-VF
+    memset(vm->v, 0, sizeof vm->v);
+
+    // Clear memory
+    memset(vm->memory, 0, sizeof vm->memory);
+
+    // Load fontset
+    for(int i = 0; i < 80; ++i)
         vm->memory[i] = chip8_fontset[i];
 
-      // Reset timers
+    // Reset timers
+    vm->delay_t = 60;
+    vm->sound_t = 60;
 }
