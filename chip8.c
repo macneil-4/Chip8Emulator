@@ -126,6 +126,5 @@ bool load_game(const char* filename, struct VirtualMachine* vm) {
         return true;
     }
 
-    fclose(game_file);
     return false;
 }

@@ -18,7 +18,7 @@ int main()
 
     // load game from file - Copy the program into the memory
     if (load_game("roms/Pong (1 player).ch8", &vm) == false) {
-        fprintf(stderr, "Error loading game file into memory, exiting...");
+        fprintf(stderr, "An error occurred  loading game file into memory, exiting...\n");
         exit(3);
     } // TODO make generic load function for program startup instead of hardcoded
 
