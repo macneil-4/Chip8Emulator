@@ -92,7 +92,7 @@ void display_register_contents(struct VirtualMachine * vm) {
     printf("\n");
 }
 
-
+// load game from disk and load into VM memory
 bool load_game(const char* filename, struct VirtualMachine* vm) {
 
     printf("Entering load_game()...\n");
@@ -117,7 +117,7 @@ bool load_game(const char* filename, struct VirtualMachine* vm) {
         }
 
         for(int i = 0; i < size; i++) {
-            vm->memory[i+512] = buffer[i];
+            vm->memory[i+512] = buffer[i]; // CHIP-8 expects applications to be loaded from address 0x200 (512 byte offset), so apply offset when loading into memory
         }
 
         printf("Game file loaded into memory.\n");
@@ -141,6 +141,85 @@ void emulate_cycle(struct VirtualMachine* vm) {
     printf("opcode fetched = %x\n", opcode);
 
     // Decode Opcode
+    switch(opcode & 0xF000) {
+        case 0x0000:
+            switch(opcode & 0x000F) {
+                case 0x0000:
+                    // TODO implement CLS 00E0 - clear the display
+                    printf("NOT YET IMPLEMENTED: CLS 00E0 - Clear the display\n");
+                    break;
+                case 0x000E:
+                    // TODO implement RET 00EE - return from subroutine. set pc to address at stop of stack, subtract 1 from stack pointer
+                    printf("NOT YET IMPLEMENTED: RET 00EE - Return from subroutine\n");
+                    break;
+                default:
+                    printf("Unknown opcode: 0x0...\n");
+                    break;
+            }
+
+        case 0x1000:
+            printf("NOT YET IMPLEMENTED: 0x1nnn\n");
+            break;
+        case 0x2000:
+            printf("NOT YET IMPLEMENTED: 0x2nnn\n");
+            break;
+        case 0x3000:
+            printf("NOT YET IMPLEMENTED: 0x3nnn\n");
+            break;
+        case 0x4000:
+            printf("NOT YET IMPLEMENTED: 0x4nnn\n");
+            break;
+        case 0x5000:
+            printf("NOT YET IMPLEMENTED: 0x5nnn\n");
+            break;
+        case 0x6000:
+            printf("NOT YET IMPLEMENTED: 0x6nnn\n");
+            break;
+        case 0x7000:
+            printf("NOT YET IMPLEMENTED: 0x7nnn\n");
+            break;
+        case 0x8000:
+            printf("NOT YET IMPLEMENTED: 0x8nnn\n");
+            break;
+        case 0x9000:
+            printf("NOT YET IMPLEMENTED: 0x9nnn\n");
+            break;
+        case 0xA000:
+            printf("NOT YET IMPLEMENTED: 0xAnnn\n");
+            break;
+        case 0xB000:
+            printf("NOT YET IMPLEMENTED: 0xBnnn\n");
+            break;
+        case 0xC000:
+            printf("NOT YET IMPLEMENTED: 0xCnnn\n");
+            break;
+        case 0xD000:
+            printf("NOT YET IMPLEMENTED: 0xDnnn\n");
+            break;
+        case 0xE000:
+            printf("NOT YET IMPLEMENTED: 0xEnnn\n");
+            break;
+        case 0xF000:
+            printf("NOT YET IMPLEMENTED: 0xFnnn\n");
+            break;
+
+        default:
+            break;
+    }
+
+    // TEST CODE - check if prefix is 6 to demonstrate determining which branch to follow based on the opcode prefix
+
+    /*
+    if ((opcode & 0xF000) == 0x6000) {
+        printf("6 prefix...\n");
+    } */
+
+    vm->pc += 2;
+
+    if (vm->pc == 0x2F0) { // DEBUG - for testing stop the emulation loop
+        exit(3);
+    }
+
         // decode 0xA2F0 // Assembly: mvi 2F0h
         // ANNN: Sets I to the address NNN (only 12 bits so we need to AND operand with 0x0FFF
         /*

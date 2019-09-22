@@ -10,4 +10,5 @@ HEADERS += \
     chip8.h
 
 DISTFILES += \
-    test.txt
+    test.txt \
+    opcodes.txt
