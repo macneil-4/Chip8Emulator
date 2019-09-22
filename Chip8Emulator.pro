@@ -8,3 +8,6 @@ SOURCES += main.c \
 
 HEADERS += \
     chip8.h
+
+DISTFILES += \
+    test.txt

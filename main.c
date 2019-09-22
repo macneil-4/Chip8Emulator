@@ -14,7 +14,13 @@ int main()
     struct VirtualMachine vm;
     vm_init(&vm);
 
+    display_register_contents(&vm);
+
     // load game from file - Copy the program into the memory
+    if (load_game("roms/Pong (1 player).ch8", &vm) == false) {
+        fprintf(stderr, "Error loading game file into memory, exiting...");
+        exit(3);
+    } // TODO make generic load function for program startup instead of hardcoded
 
     // emulation loop
     //while (1) {

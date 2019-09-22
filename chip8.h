@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 // variable declarations
 extern const unsigned char chip8_fontset[80];
@@ -12,6 +14,7 @@ struct Keypad {
   // keys => 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F
 };
 
+// CHIP-8 memory layout
 // 0x000-0x1FF - Chip 8 interpreter (contains font set in emu)
 // 0x050-0x0A0 - Used for the built in 4x5 pixel font set (0-F)
 // 0x200-0xFFF - Program ROM and work RAM
@@ -39,9 +42,12 @@ struct VirtualMachine {
 };
 
 // function declarations
-void vm_init(struct VirtualMachine *);
+void vm_init(struct VirtualMachine*);
 void fetch_opcode();
 void decode_opcode(unsigned short);
-void execute_opcode(unsigned short, struct VirtualMachine *);
+void execute_opcode(unsigned short, struct VirtualMachine*);
+
+void display_register_contents(struct VirtualMachine*);
+bool load_game(const char*, struct VirtualMachine*);
 
 #endif

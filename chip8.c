@@ -38,8 +38,8 @@ const unsigned char chip8_fontset[80] =
   0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-void vm_init(struct VirtualMachine *vm) {
-    printf("Initializing VM...\n");
+void vm_init(struct VirtualMachine* vm) {
+    printf("Entering vm_init()...\n");
 
     vm->idx = 0;
     vm->sp = 0;
@@ -65,4 +65,67 @@ void vm_init(struct VirtualMachine *vm) {
     // Reset timers
     vm->delay_t = 60;
     vm->sound_t = 60;
+}
+
+void display_register_contents(struct VirtualMachine * vm) {
+    /*
+    unsigned short idx; // index register
+    unsigned short stack[16]; // the stack - up to 48 bytes
+    unsigned short pc; // program counter
+    unsigned short opcode; // current opcode
+
+    unsigned char v[16]; // general purpose 8-bit registers - vf (v[15]) should be avoided as it also doubles as a flag for some instructions
+    unsigned char delay_t; // delay timer
+    unsigned char sound_t; // sound timer
+    unsigned char sp; // stack pointer
+    unsigned char memory[4096];
+    */
+
+    printf("Entering display_register_contents()\n");
+
+    printf("register contents: ");
+    printf("idx=%x, ", vm->idx);
+    printf("pc=%x, ", vm->pc);
+    printf("sp=%x, ", vm->sp);
+    printf("delay_t=%x, ", vm->delay_t);
+    printf("sound_t=%x, ", vm->sound_t);
+    printf("\n");
+}
+
+
+bool load_game(const char* filename, struct VirtualMachine* vm) {
+
+    printf("Entering load_game()...\n");
+
+    FILE* game_file = fopen(filename, "rb");
+    int size;
+
+    if(game_file != NULL) {
+
+        // load game_file into vm->memory
+        fseek(game_file, 0, SEEK_END);
+        size = ftell(game_file);
+        rewind(game_file);
+
+        unsigned char buffer[size+1];
+
+        size_t result = fread(&buffer, 1, size, game_file);
+
+        if ((int)result != size) {
+            fprintf(stderr, "Error returned from fread()");
+            exit(3);
+        }
+
+        for(int i = 0; i < size; i++) {
+            vm->memory[i+512] = buffer[i];
+        }
+
+        printf("Game file loaded into memory.\n");
+
+        fclose(game_file);
+        return true;
+    }
+
+    fclose(game_file);
+    return false;
 }
