@@ -89,6 +89,9 @@ void display_register_contents(struct VirtualMachine * vm) {
     printf("sp=%x, ", vm->sp);
     printf("delay_t=%x, ", vm->delay_t);
     printf("sound_t=%x, ", vm->sound_t);
+    for (int i = 0; i < 15; i++) {
+        printf("v[%x]=%i, ", i, vm->v[i]);
+    }
     printf("\n");
 }
 
@@ -138,6 +141,8 @@ void emulate_cycle(struct VirtualMachine* vm) {
         // opcode = memory[pc] << 8 | memory[pc + 1];
         // shift A2 8 bits which becomes A200, then OR with F0 to become A2F0
     unsigned short opcode = vm->memory[vm->pc] << 8 | vm->memory[vm->pc + 1];
+    unsigned short value;
+    unsigned char reg;
     printf("opcode fetched = %x\n", opcode);
 
     // Decode Opcode
@@ -173,7 +178,11 @@ void emulate_cycle(struct VirtualMachine* vm) {
             printf("NOT YET IMPLEMENTED: 0x5nnn\n");
             break;
         case 0x6000:
-            printf("NOT YET IMPLEMENTED: 0x6nnn\n");
+            value = (opcode & 0x00FF);
+            reg = ((opcode & 0x0F00) >> 8);
+            int reg_int = (int) reg;
+            vm->v[reg_int] = value;
+            // display_register_contents(vm);
             break;
         case 0x7000:
             printf("NOT YET IMPLEMENTED: 0x7nnn\n");
