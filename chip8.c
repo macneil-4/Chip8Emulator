@@ -311,8 +311,13 @@ void emulate_cycle(struct VirtualMachine* vm) {
 
             break;
 
-        case 0x9000:
-            printf("NOT YET IMPLEMENTED: 0x9nnn\n");
+        case 0x9000: // SNE Vx, Vy
+            if ((vm->v[((opcode & 0x0F00) >> 8)]) != (vm->v[((opcode & 0x00F0) >> 4)])) {
+                vm->pc += 4;
+            } else {
+                vm->pc += 2;
+            }
+
             break;
 
         case 0xA000: // LD idx, addr
