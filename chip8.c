@@ -65,6 +65,9 @@ void vm_init(struct VirtualMachine* vm) {
     // Reset timers
     vm->delay_t = 60;
     vm->sound_t = 60;
+
+    // generate seed for rand
+    srand((unsigned) time(&vm->seed));
 }
 
 void display_register_contents(struct VirtualMachine * vm) {
@@ -144,6 +147,7 @@ void emulate_cycle(struct VirtualMachine* vm) {
     unsigned short value;
     unsigned char reg;
     unsigned int result;
+    unsigned char rand_c;
     printf("opcode fetched = %x\n", opcode);
 
     // Decode Opcode
@@ -165,7 +169,7 @@ void emulate_cycle(struct VirtualMachine* vm) {
 
         case 0x1000: // JP addr
             vm->pc = (opcode & 0x0FFF);
-            display_register_contents(vm);
+            // display_register_contents(vm);
             break;
 
         case 0x2000: // CALL addr
@@ -329,20 +333,25 @@ void emulate_cycle(struct VirtualMachine* vm) {
             vm->pc = ((opcode & 0x0FFF) + vm->v[0]);
             break;
 
-        case 0xC000:
-            printf("NOT YET IMPLEMENTED: 0xCnnn\n");
+        case 0xC000: // RND Vx, byte
+            rand_c = (rand() % 255);
+            vm->v[((opcode & 0x0F00) >> 8)] = (rand_c & (opcode & 0x00FF));
+            vm->pc += 2;
             break;
 
         case 0xD000:
             printf("NOT YET IMPLEMENTED: 0xDnnn\n");
+            vm->pc += 2;
             break;
 
         case 0xE000:
             printf("NOT YET IMPLEMENTED: 0xEnnn\n");
+            vm->pc += 2;
             break;
 
         case 0xF000:
             printf("NOT YET IMPLEMENTED: 0xFnnn\n");
+            vm->pc += 2;
             break;
 
         default:

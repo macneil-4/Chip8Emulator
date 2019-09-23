@@ -39,6 +39,8 @@ struct VirtualMachine {
     // (0,31)(63,31)
     // 2048 pixels, monochrome (either black or white, 1 or 0)
     unsigned char display[64 * 32];
+
+    time_t seed;
 };
 
 // function declarations

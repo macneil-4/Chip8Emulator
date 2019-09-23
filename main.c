@@ -14,6 +14,8 @@ int main()
     struct VirtualMachine vm;
     vm_init(&vm);
 
+
+
     display_register_contents(&vm);
 
     // load game from file - Copy the program into the memory
