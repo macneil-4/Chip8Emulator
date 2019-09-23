@@ -162,11 +162,14 @@ void emulate_cycle(struct VirtualMachine* vm) {
                     break;
             }
 
-        case 0x1000:
-            printf("NOT YET IMPLEMENTED: 0x1nnn\n");
+        case 0x1000: // JP addr
+            vm->pc = (opcode & 0x0FFF);
+            display_register_contents(vm);
             break;
-        case 0x2000:
-            printf("NOT YET IMPLEMENTED: 0x2nnn\n");
+        case 0x2000: // CALL addr
+            vm->sp++;
+            vm->stack[vm->sp] = vm->pc;
+            vm->pc = (opcode & 0x0FFF);
             break;
         case 0x3000:
             printf("NOT YET IMPLEMENTED: 0x3nnn\n");
@@ -177,7 +180,7 @@ void emulate_cycle(struct VirtualMachine* vm) {
         case 0x5000:
             printf("NOT YET IMPLEMENTED: 0x5nnn\n");
             break;
-        case 0x6000:
+        case 0x6000: // LD Vx, byte
             value = (opcode & 0x00FF);
             reg = ((opcode & 0x0F00) >> 8);
             int reg_int = (int) reg;
@@ -193,11 +196,11 @@ void emulate_cycle(struct VirtualMachine* vm) {
         case 0x9000:
             printf("NOT YET IMPLEMENTED: 0x9nnn\n");
             break;
-        case 0xA000:
-            printf("NOT YET IMPLEMENTED: 0xAnnn\n");
+        case 0xA000: // LD idx, addr
+            vm->idx = (opcode & 0x0FFF);
             break;
-        case 0xB000:
-            printf("NOT YET IMPLEMENTED: 0xBnnn\n");
+        case 0xB000: // JP v0. addr
+            vm->pc = ((opcode & 0x0FFF) + vm->v[0]);
             break;
         case 0xC000:
             printf("NOT YET IMPLEMENTED: 0xCnnn\n");
