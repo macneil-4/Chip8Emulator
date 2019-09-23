@@ -143,6 +143,7 @@ void emulate_cycle(struct VirtualMachine* vm) {
     unsigned short opcode = vm->memory[vm->pc] << 8 | vm->memory[vm->pc + 1];
     unsigned short value;
     unsigned char reg;
+    unsigned int result;
     printf("opcode fetched = %x\n", opcode);
 
     // Decode Opcode
@@ -166,11 +167,13 @@ void emulate_cycle(struct VirtualMachine* vm) {
             vm->pc = (opcode & 0x0FFF);
             display_register_contents(vm);
             break;
+
         case 0x2000: // CALL addr
             vm->sp++;
             vm->stack[vm->sp] = vm->pc;
             vm->pc = (opcode & 0x0FFF);
             break;
+
         case 0x3000: // SE Vx, byte - Skip next instruction if Vx = kk.
             if ((vm->v[((opcode & 0x0F00) >> 8)]) == (opcode & 0x00FF)) {
                 vm->pc += 4;
@@ -179,6 +182,7 @@ void emulate_cycle(struct VirtualMachine* vm) {
             }
 
             break;
+
         case 0x4000: // SNE Vx, byte - Skip next instruction if Vx != kk.
             if ((vm->v[((opcode & 0x0F00) >> 8)]) != (opcode & 0x00FF)) {
                 vm->pc += 4;
@@ -187,9 +191,16 @@ void emulate_cycle(struct VirtualMachine* vm) {
             }
 
             break;
-        case 0x5000:
-            printf("NOT YET IMPLEMENTED: 0x5nnn\n");
+
+        case 0x5000: // SE Vx, Vy - Skip next instruction if Vx = Vy.
+            if ((vm->v[((opcode & 0x0F00) >> 8)]) != ((opcode & 0x00F0) >> 4)) {
+                vm->pc += 4;
+            } else {
+                vm->pc += 2;
+            }
+
             break;
+
         case 0x6000: // LD Vx, byte
             value = (opcode & 0x00FF);
             reg = ((opcode & 0x0F00) >> 8);
@@ -199,36 +210,139 @@ void emulate_cycle(struct VirtualMachine* vm) {
             vm->pc += 2;
             // display_register_contents(vm);
             break;
-        case 0x7000:
-            printf("NOT YET IMPLEMENTED: 0x7nnn\n");
+
+        case 0x7000: // ADD Vx, byte
+            vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[((opcode & 0x0F00) >> 8)] + (opcode & 0x00FF));
+            vm->pc += 2;
+
             break;
+
         case 0x8000:
-            printf("NOT YET IMPLEMENTED: 0x8nnn\n");
+            switch(opcode & 0x000F) {
+                case 0x0000: // LD Vx, Vy - Set Vx = Vy.
+                    vm->v[((opcode & 0x0F00) >> 8)] = vm->v[((opcode & 0x00F0) >> 4)];
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0001: // OR Vx, Vy - Set Vx = Vx OR Vy.
+                    vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[((opcode & 0x0F00) >> 8)] | ((opcode & 0x0F0) >> 4));
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0002: // AND Vx, Vy
+                    vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[((opcode & 0x0F00) >> 8)] & ((opcode & 0x0F0) >> 4));
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0003: // XOR Vx, Vy
+                    vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[((opcode & 0x0F00) >> 8)] ^ ((opcode & 0x0F0) >> 4));
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0004: // ADD Vx, Vy
+                    result = (vm->v[((opcode & 0x0F00) >> 8)] + ((opcode & 0x0F0) >> 4));
+
+                    if (result > 255) {
+                        vm->v[0xF] = 1;
+                    } else {
+                        vm->v[0xF] = 0;
+                    }
+
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0005: // SUB Vx, Vy
+                    if ((vm->v[((opcode & 0x0F00) >> 8)]) > (vm->v[((opcode & 0x00F0) >> 4)])) {
+                        vm->v[0xF] = 1;
+                    } else {
+                        vm->v[0xF] = 0;
+                    }
+
+                    vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[((opcode & 0x0F00) >> 8)] - ((opcode & 0x0F0) >> 4));
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0006: // SHR Vx {, Vy} (shift right)
+                    if ((((opcode & 0x0F00) >> 8) & 0x0001) == 1) { // If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0.
+                        vm->v[0xF] = 1;
+                    } else {
+                        vm->v[0xF] = 0;
+                    }
+
+                    vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[(opcode & 0x0F00)] / 2);
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x0007: // SUBN Vx, Vy
+                    if ((vm->v[((opcode & 0x00F0) >> 4)]) > vm->v[((opcode & 0x0F00) >> 8)]) {
+                        vm->v[0xF] = 1;
+                    } else {
+                        vm->v[0xF] = 0;
+                    }
+
+                    vm->v[((opcode & 0x0F00) >> 8)] = vm->v[((opcode & 0x00F0) >> 4)] - vm->v[((opcode & 0x0F00) >> 8)];
+                    vm->pc += 2;
+
+                    break;
+
+                case 0x000E: // SHL Vx {, Vy} (shift left)
+                    if ((((opcode & 0x0F00) >> 8) & 0x0008) == 1) { // If the least-significant bit of Vx is 1, then VF is set to 1, otherwise 0.
+                        vm->v[0xF] = 1;
+                    } else {
+                        vm->v[0xF] = 0;
+                    }
+
+                    vm->v[((opcode & 0x0F00) >> 8)] = (vm->v[(opcode & 0x0F00)] * 2);
+                    vm->pc += 2;
+
+                    break;
+
+                default:
+                    printf("Invalid opcode 0x8nnn");
+                    exit(3);
+            }
+
             break;
+
         case 0x9000:
             printf("NOT YET IMPLEMENTED: 0x9nnn\n");
             break;
+
         case 0xA000: // LD idx, addr
             vm->idx = (opcode & 0x0FFF);
             vm->pc += 2;
             break;
+
         case 0xB000: // JP v0. addr
             vm->pc = ((opcode & 0x0FFF) + vm->v[0]);
             break;
+
         case 0xC000:
             printf("NOT YET IMPLEMENTED: 0xCnnn\n");
             break;
+
         case 0xD000:
             printf("NOT YET IMPLEMENTED: 0xDnnn\n");
             break;
+
         case 0xE000:
             printf("NOT YET IMPLEMENTED: 0xEnnn\n");
             break;
+
         case 0xF000:
             printf("NOT YET IMPLEMENTED: 0xFnnn\n");
             break;
 
         default:
+            printf("Invalid opcode");
+            exit(3);
             break;
     }
 
