@@ -171,11 +171,21 @@ void emulate_cycle(struct VirtualMachine* vm) {
             vm->stack[vm->sp] = vm->pc;
             vm->pc = (opcode & 0x0FFF);
             break;
-        case 0x3000:
-            printf("NOT YET IMPLEMENTED: 0x3nnn\n");
+        case 0x3000: // SE Vx, byte - Skip next instruction if Vx = kk.
+            if ((vm->v[((opcode & 0x0F00) >> 8)]) == (opcode & 0x00FF)) {
+                vm->pc += 4;
+            } else {
+                vm->pc += 2;
+            }
+
             break;
-        case 0x4000:
-            printf("NOT YET IMPLEMENTED: 0x4nnn\n");
+        case 0x4000: // SNE Vx, byte - Skip next instruction if Vx != kk.
+            if ((vm->v[((opcode & 0x0F00) >> 8)]) != (opcode & 0x00FF)) {
+                vm->pc += 4;
+            } else {
+                vm->pc += 2;
+            }
+
             break;
         case 0x5000:
             printf("NOT YET IMPLEMENTED: 0x5nnn\n");
@@ -185,6 +195,8 @@ void emulate_cycle(struct VirtualMachine* vm) {
             reg = ((opcode & 0x0F00) >> 8);
             int reg_int = (int) reg;
             vm->v[reg_int] = value;
+
+            vm->pc += 2;
             // display_register_contents(vm);
             break;
         case 0x7000:
@@ -198,6 +210,7 @@ void emulate_cycle(struct VirtualMachine* vm) {
             break;
         case 0xA000: // LD idx, addr
             vm->idx = (opcode & 0x0FFF);
+            vm->pc += 2;
             break;
         case 0xB000: // JP v0. addr
             vm->pc = ((opcode & 0x0FFF) + vm->v[0]);
@@ -225,13 +238,6 @@ void emulate_cycle(struct VirtualMachine* vm) {
     if ((opcode & 0xF000) == 0x6000) {
         printf("6 prefix...\n");
     } */
-
-    vm->pc += 2;
-
-    if (vm->pc == 0x2F0) { // DEBUG - for testing stop the emulation loop
-        exit(3);
-    }
-
         // decode 0xA2F0 // Assembly: mvi 2F0h
         // ANNN: Sets I to the address NNN (only 12 bits so we need to AND operand with 0x0FFF
         /*
