@@ -1,6 +1,3 @@
-#ifndef CHIP8_H
-#define CHIP8_H
-
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -52,5 +49,3 @@ void execute_opcode(unsigned short, struct VirtualMachine*);
 void emulate_cycle(struct VirtualMachine*);
 void display_register_contents(struct VirtualMachine*);
 bool load_game(const char*, struct VirtualMachine*);
-
-#endif
