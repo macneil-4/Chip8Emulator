@@ -7,6 +7,9 @@ bool initDisplay() {
 
     window = NULL;
     screenSurface = NULL;
+    renderer = NULL;
+
+    bool success= true;
 
     // setting up SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -16,18 +19,20 @@ bool initDisplay() {
 
         if (window == NULL) {
             printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+            success = false;
         } else {
-            screenSurface = SDL_GetWindowSurface(window);
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); // SDL_RENDERER_ACCELERATED => the rendered uses hardware acceleration
 
-            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
-
-            SDL_UpdateWindowSurface(window);
-
-            SDL_Delay(2000);
+            if (renderer == NULL) {
+                printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+                success = false;
+            } else {
+                SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+            }
         }
     }
 
-    return true;
+    return success;
 }
 
 bool closeDisplay() {
@@ -37,4 +42,8 @@ bool closeDisplay() {
     SDL_Quit();
 
     return true;
+}
+
+void clearDisplay() {
+
 }

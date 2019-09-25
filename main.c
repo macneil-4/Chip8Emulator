@@ -5,29 +5,29 @@
 int main(int argc, char* args[])
 {
     // setup graphics Setup the graphics (window size, display mode, etc) and input system (bind callbacks)
-    initDisplay();
-
-    closeDisplay();
+    if (!initDisplay()) {
+        printf("Error occurred initializing display...\n");
+        exit(3);
+    }
 
     // setup input
+    SDL_Event eventHandler;
+    bool exitKeyPressed = false;
 
     // initialize VM - Clear the memory, registers and screen
     struct VirtualMachine vm;
     vmInit(&vm);
 
-    displayRegisterContents(&vm);
-
     // load game from file - Copy the program into the memory
     if (loadGame("roms/Pong (1 player).ch8", &vm) == false) {
         fprintf(stderr, "An error occurred  loading game file into memory, exiting...\n");
         exit(3);
-    } // TODO make generic load function for program startup instead of hardcoded
+    } // TODO make generic load function for program startup based on command line arguments instead of hardcoded
 
     // emulation loop
     printf("Now starting emulation loop...\n");
-    printf("Skipping emulation loop"); // temporary
-    return 0;
-    while (1) {
+
+    while (!exitKeyPressed) {
         emulateCycle(&vm);
 
         // draw_screen (if required)
@@ -40,7 +40,10 @@ int main(int argc, char* args[])
         // handle_keypress (if required)
 
         // store key press state (press and release) - If we press or release a key, we should store this state in the part that emulates the keypad-
+        handleEvent(&eventHandler);
     }
+
+    closeDisplay();
 
     return 0;
 }

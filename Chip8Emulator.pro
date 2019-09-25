@@ -5,11 +5,13 @@ CONFIG -= qt
 
 SOURCES += main.c \
     chip8.c \
-    display.c
+    display.c \
+    keyboard.c
 
 HEADERS += \
     chip8.h \
-    display.h
+    display.h \
+    keyboard.h
 
 DISTFILES += \
     test.txt \
