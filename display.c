@@ -2,6 +2,12 @@
 
 bool initDisplay() {
 
+    SCREEN_WIDTH = 320;
+    SCREEN_HEIGHT = 320;
+
+    window = NULL;
+    screenSurface = NULL;
+
     // setting up SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());

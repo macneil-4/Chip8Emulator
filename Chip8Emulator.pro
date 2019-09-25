@@ -15,4 +15,5 @@ DISTFILES += \
     test.txt \
     opcodes.txt
 
-LIBS += -lSDL2main -lSDL2
+LIBS += -L/usr/lib/x86_64-linux-gnu -lSDL2
+INCLUDEPATH += /usr/lib/x86_64-linux-gnu
