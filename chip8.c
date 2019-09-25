@@ -38,7 +38,7 @@ const unsigned char chip8_fontset[80] =
   0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-void vm_init(struct VirtualMachine* vm) {
+void vmInit(struct VirtualMachine* vm) {
     printf("Entering vm_init()...\n");
 
     vm->idx = 0;
@@ -70,7 +70,7 @@ void vm_init(struct VirtualMachine* vm) {
     srand((unsigned) time(&vm->seed));
 }
 
-void display_register_contents(struct VirtualMachine * vm) {
+void displayRegisterContents(struct VirtualMachine * vm) {
     /*
     unsigned short idx; // index register
     unsigned short stack[16]; // the stack - up to 48 bytes
@@ -99,7 +99,7 @@ void display_register_contents(struct VirtualMachine * vm) {
 }
 
 // load game from disk and load into VM memory
-bool load_game(const char* filename, struct VirtualMachine* vm) {
+bool loadGame(const char* filename, struct VirtualMachine* vm) {
 
     printf("Entering load_game()...\n");
 
@@ -135,7 +135,7 @@ bool load_game(const char* filename, struct VirtualMachine* vm) {
     return false;
 }
 
-void emulate_cycle(struct VirtualMachine* vm) {
+void emulateCycle(struct VirtualMachine* vm) {
     // emulate one cycle
         // Fetch Opcode (each opcode is 2 bytes long)
         // Assume the following for opcode 0xA2F0

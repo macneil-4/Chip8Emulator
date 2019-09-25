@@ -2,7 +2,7 @@
 
 bool initDisplay() {
 
-    SCREEN_WIDTH = 320;
+    SCREEN_WIDTH = 640;
     SCREEN_HEIGHT = 320;
 
     window = NULL;

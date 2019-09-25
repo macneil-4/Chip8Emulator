@@ -13,12 +13,12 @@ int main(int argc, char* args[])
 
     // initialize VM - Clear the memory, registers and screen
     struct VirtualMachine vm;
-    vm_init(&vm);
+    vmInit(&vm);
 
-    display_register_contents(&vm);
+    displayRegisterContents(&vm);
 
     // load game from file - Copy the program into the memory
-    if (load_game("roms/Pong (1 player).ch8", &vm) == false) {
+    if (loadGame("roms/Pong (1 player).ch8", &vm) == false) {
         fprintf(stderr, "An error occurred  loading game file into memory, exiting...\n");
         exit(3);
     } // TODO make generic load function for program startup instead of hardcoded
@@ -28,7 +28,7 @@ int main(int argc, char* args[])
     printf("Skipping emulation loop"); // temporary
     return 0;
     while (1) {
-        emulate_cycle(&vm);
+        emulateCycle(&vm);
 
         // draw_screen (if required)
 

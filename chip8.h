@@ -41,11 +41,11 @@ struct VirtualMachine {
 };
 
 // function declarations
-void vm_init(struct VirtualMachine*);
-unsigned short fetch_opcode(struct VirtualMachine*);
-void decode_opcode(unsigned short);
-void execute_opcode(unsigned short, struct VirtualMachine*);
+void vmInit(struct VirtualMachine*);
+unsigned short fetchOpcode(struct VirtualMachine*);
+void decodeOpcode(unsigned short);
+void executeOpcode(unsigned short, struct VirtualMachine*);
 
-void emulate_cycle(struct VirtualMachine*);
-void display_register_contents(struct VirtualMachine*);
-bool load_game(const char*, struct VirtualMachine*);
+void emulateCycle(struct VirtualMachine*);
+void displayRegisterContents(struct VirtualMachine*);
+bool loadGame(const char*, struct VirtualMachine*);
