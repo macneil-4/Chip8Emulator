@@ -5,11 +5,9 @@ bool initDisplay() {
     SCREEN_WIDTH = 640;
     SCREEN_HEIGHT = 320;
 
-    window = NULL;
-    screenSurface = NULL;
-    renderer = NULL;
 
-    bool success= true;
+
+    bool success = true;
 
     // setting up SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -44,6 +42,6 @@ bool closeDisplay() {
     return true;
 }
 
-void clearDisplay() {
+void drawDisplay() {}
 
-}
+void clearDisplay() {}

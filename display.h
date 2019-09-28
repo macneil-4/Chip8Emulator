@@ -1,14 +1,14 @@
-#include <stdbool.h>
-#include <SDL2/SDL.h> // include SDL graphics and input
+#include "defs.h"
 
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
-SDL_Window* window;
-SDL_Surface* screenSurface;
-SDL_Renderer* renderer;
+extern SDL_Window* window;
+extern SDL_Surface* screenSurface;
+extern SDL_Renderer* renderer;
 
 bool initDisplay();
 bool closeDisplay();
 
+void drawDisplay();
 void clearDisplay(); // opcode 00E0

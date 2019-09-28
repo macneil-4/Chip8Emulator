@@ -385,3 +385,5 @@ void emulateCycle(struct VirtualMachine* vm) {
 
   // Update timers
 }
+
+void updateDisplay() {}

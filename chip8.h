@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <stdbool.h>
-#include <stdlib.h>
+#include "defs.h"
 
 // variable declarations
 extern const unsigned char chip8_fontset[80];
@@ -49,3 +45,4 @@ void executeOpcode(unsigned short, struct VirtualMachine*);
 void emulateCycle(struct VirtualMachine*);
 void displayRegisterContents(struct VirtualMachine*);
 bool loadGame(const char*, struct VirtualMachine*);
+void updateDisplay();

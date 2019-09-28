@@ -1,6 +1,7 @@
 #include "chip8.h"
 // "chip8.h" cpu core implementation
 #include "display.h"
+#include "keyboard.h"
 
 int main(int argc, char* args[])
 {
@@ -31,16 +32,14 @@ int main(int argc, char* args[])
         emulateCycle(&vm);
 
         // draw_screen (if required)
-
         // if draw flag set, update the screen Because the system does not draw every cycle, we should set a draw flag when we need to update our screen. Only two opcodes should set this flag:
         // 0x00E0 – Clears the screen
         // 0xDXYN – Draws a sprite on the screen
-
+        drawDisplay();
 
         // handle_keypress (if required)
-
         // store key press state (press and release) - If we press or release a key, we should store this state in the part that emulates the keypad-
-        handleEvent(&eventHandler);
+        handleEvent(&eventHandler, &exitKeyPressed);
     }
 
     closeDisplay();

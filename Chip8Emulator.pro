@@ -11,7 +11,8 @@ SOURCES += main.c \
 HEADERS += \
     chip8.h \
     display.h \
-    keyboard.h
+    keyboard.h \
+    defs.h
 
 DISTFILES += \
     test.txt \
